@@ -127,9 +127,9 @@ test('x-forwarded-for', (t) => {
             if (!error && response.statusCode === 200) {
                 // make sure response ip is the same as the one we passed in
                 const lastIp = options.headers['x-forwarded-for']
-                    .split(',')[0]
+                    .split(',')[1]
                     .trim();
-                t.equal(lastIp, found);
+                t.equal(found, lastIp);
                 server.close();
             }
         });
@@ -184,7 +184,7 @@ test('x-forwarded-for with ipv4:port', (t) => {
                     .split(',')[0]
                     .trim()
                     .split(':')[0];
-                t.equal(firstIp, found);
+                t.equal(found, firstIp);
                 server.close();
             }
         });

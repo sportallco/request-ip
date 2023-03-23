@@ -15,30 +15,37 @@ function getClientIpFromXForwardedFor(value) {
         throw new TypeError(`Expected a string, got "${typeof value}"`);
     }
 
-    // x-forwarded-for may return multiple IP addresses in the format:
-    // "client IP, proxy 1 IP, proxy 2 IP"
-    // Therefore, the right-most IP address is the IP address of the most recent proxy
-    // and the left-most IP address is the IP address of the originating client.
-    // source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
-    // Azure Web App's also adds a port for some reason, so we'll only use the first part (the IP)
-    const forwardedIps = value.split(',').map((e) => {
-        const ip = e.trim();
+    const getForwardedIps =(value) => {
+      const ips = value.split(',').map((ip) => ip.trim());
+      const filteredIps = ips.reduce((ips, ip) => {
+        // Remove port when it exists
         if (ip.includes(':')) {
-            const splitted = ip.split(':');
-            // make sure we only use this if it's ipv4 (ip:port)
-            if (splitted.length === 2) {
-                return splitted[0];
-            }
-        }
-        return ip;
-    });
+          const [address, port] = ip.split(':');
 
+          // Return early when port is wrong
+          if (port && isNaN(parseInt(port))) {
+            return ips;
+          }
+
+          // Only get address when port is valid
+          ips.push(address)
+        }
+
+        ips.push(ip)
+        return ips;
+      }, []);
+
+      return filteredIps; 
+    }
+      
     // Sometimes IP addresses in this header can be 'unknown' (http://stackoverflow.com/a/11285650).
     // Therefore taking the right-most IP address that is not unknown
     // A Squid configuration directive can also set the value to "unknown" (http://www.squid-cache.org/Doc/config/forwarded_for/)
-    for (let i = 0; i < forwardedIps.length; i++) {
+    const forwardedIps = getForwardedIps(value)
+
+    for (let i = forwardedIps.length > 1 ? forwardedIps.length - 2 : 0; i < forwardedIps.length; i++) {
         if (is.ip(forwardedIps[i])) {
-            return forwardedIps[i];
+            return forwardedIps[i]
         }
     }
 

@@ -30,13 +30,13 @@
     "cloudflare",
     "Cf-Pseudo-IPv4"
   ],
-  "homepage": "https://github.com/pbojinov/request-ip",
+  "homepage": "https://github.com/sportallco/request-ip",
   "bugs": {
-    "url": "https://github.com/pbojinov/request-ip/issues"
+    "url": "https://github.com/sportallco/request-ip/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pbojinov/request-ip.git"
+    "url": "https://github.com/sportallco/request-ip.git"
   },
   "license": "MIT",
   "author": "Petar Bojinov <petarbojinov+github@gmail.com>",
@@ -52,7 +52,6 @@
   "main": "./lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "changelog": "github_changelog_generator -u pbojinov -p request-ip",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test": "nyc --reporter=html --reporter=text --check-coverage --lines=100 --statements=100 tape ./test/*.js"
   },
@@ -69,5 +68,6 @@
     "request": "^2.54.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.1"
-  }
+  },
+  "packageManager": "yarn@3.5.0"
 }

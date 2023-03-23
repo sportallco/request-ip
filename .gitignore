@@ -8,3 +8,12 @@ package-lock.json
 yarn.lock
 .nyc_output
 .idea
+
+# yarn v2+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
